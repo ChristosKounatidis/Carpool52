@@ -39,11 +39,11 @@
         app:layout_constraintTop_toBottomOf="@+id/editEmailAddressSign" />
 
     <Button
-        android:id="@+id/checkLoginBtn"
+        android:id="@+id/checkSignup"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/login"
+        android:text="@string/sign_up2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editPasswordSign" />
@@ -54,17 +54,17 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginTop="100dp"
-        android:text="@string/you_don_t_have_an_account"
+        android:text="@string/you_already_have_an_account"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editPasswordSign" />
 
     <Button
-        android:id="@+id/gotoSignupBtn"
+        android:id="@+id/gotoLogin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="86dp"
-        android:text="@string/sign_up"
+        android:text="@string/login2"
         app:layout_constraintStart_toEndOf="@+id/signupText"
         app:layout_constraintTop_toBottomOf="@+id/editPasswordSign" />
 

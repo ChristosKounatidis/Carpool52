@@ -1,12 +1,16 @@
 package com.example.carpool52;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,10 +59,33 @@ public class LoginFragment extends Fragment {
         }
     }
 
+    private Button button1;
+    private Button button2;
+
+    @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        button1 =view.findViewById(R.id.checkLoginBtn);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavDirections action1 = LoginFragmentDirections.actionLoginFragmentToListFragment(); //init to velaki
+                Navigation.findNavController(view).navigate(action1); //allagh fragment
+            }
+        });
+
+        button2 = view.findViewById(R.id.gotoSignupBtn);
+        button2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                NavDirections action2 = LoginFragmentDirections.actionLoginFragmentToSignupFragment(); //init to velaki
+                Navigation.findNavController(view).navigate(action2); //allagh fragment
+            }
+        });
+
+        return view;
     }
 }

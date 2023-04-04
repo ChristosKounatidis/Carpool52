@@ -4,4 +4,12 @@
     <string name="welcome_message">Καλώς Ήρθατε</string>
     <string name="login_message">Για Login</string>
     <string name="loginText">Login</string>
+    <string name="password">password</string>
+    <string name="login">Login</string>
+    <string name="email">email</string>
+    <string name="you_don_t_have_an_account">You don\'t have an account?</string>
+    <string name="sign_up">Sign up</string>
+    <string name="you_already_have_an_account">You already have an account?</string>
+    <string name="sign_up2">sign up</string>
+    <string name="login2">login</string>
 </resources>
