@@ -8,6 +8,7 @@
     tools:context=".ListFragment" >
 
     <RadioGroup
+        android:id="@+id/groupButtons"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -19,13 +20,13 @@
             android:id="@+id/driverButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Οδηγός" />
+            android:text="@string/Driver" />
 
         <RadioButton
             android:id="@+id/passangerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Επιβάτης" />
+            android:text="@string/Passanger" />
     </RadioGroup>
 
     <TextView
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
         android:layout_marginTop="32dp"
-        android:text="Τι είσαι;"
+        android:text="@string/RadioMessage"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

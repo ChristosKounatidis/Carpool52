@@ -12,4 +12,7 @@
     <string name="you_already_have_an_account">You already have an account?</string>
     <string name="sign_up2">sign up</string>
     <string name="login2">login</string>
+    <string name="Driver">Οδηγός</string>
+    <string name="Passanger">Επιβάτης</string>
+    <string name="RadioMessage">Τι είσαι;</string>
 </resources>
