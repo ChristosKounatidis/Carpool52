@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1045183786357",
+    "project_id": "carpool52-f51be",
+    "storage_bucket": "carpool52-f51be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1045183786357:android:3cfb6275031623fbe9b73c",
+        "android_client_info": {
+          "package_name": "com.example.carpool52"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1045183786357-20p9t2arav1us8t6vbp4v87i07smosci.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCWVP92Z-pcLjJeptbLV0Cv-p86ZrVp3Ic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1045183786357-20p9t2arav1us8t6vbp4v87i07smosci.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
