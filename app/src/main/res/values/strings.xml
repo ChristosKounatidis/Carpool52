@@ -15,4 +15,5 @@
     <string name="Driver">Οδηγός</string>
     <string name="Passanger">Επιβάτης</string>
     <string name="RadioMessage">Τι είσαι;</string>
+    <string name="name">name</string>
 </resources>

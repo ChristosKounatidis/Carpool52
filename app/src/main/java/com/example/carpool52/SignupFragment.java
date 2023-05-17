@@ -3,6 +3,7 @@ package com.example.carpool52;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
@@ -11,6 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,8 +68,11 @@ public class SignupFragment extends Fragment {
         }
     }
 
-    private Button button1;
+    private Button buttonSignup;
     private Button button2;
+    private EditText Email;
+    private EditText Password;
+    private EditText Name;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -68,15 +80,55 @@ public class SignupFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
-        button1 =view.findViewById(R.id.checkSignup);
-        button1.setOnClickListener(new View.OnClickListener() {
+        Email = view.findViewById(R.id.editEmailAddressSign);
+        Name = view.findViewById(R.id.editName);
+        Password = view.findViewById(R.id.editPasswordSign);
+        buttonSignup = view.findViewById(R.id.checkSignup);
+        buttonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavDirections action = SignupFragmentDirections.actionSignupFragmentToLoginFragment(); //init to velaki
-                Navigation.findNavController(view).navigate(action); //allagh fragment
+                String Var_email = Email.getText().toString();
+                String Var_password = Password.getText().toString();
+                String Var_name = Name.getText().toString();
+                //
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+                // Retrieve the current maximum ID
+                DocumentReference countersDocRef = db.collection("Counters").document("users");
+                countersDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        // Get the current maximum ID
+                        int currentMaxId = documentSnapshot.getLong("maxId").intValue();
+                        int newId = currentMaxId + 1;
+                        //new ID Done
+                        //create USER
+                        try {
+                            Users user = new Users(newId,Var_name,Var_password,Var_email,0,0);
+                            MainActivity.db.collection("Users").
+                            document(""+newId).
+                            set(user).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    countersDocRef.update("maxId", newId);//UPDATE w/ the new max ID
+                                    NavDirections action = SignupFragmentDirections.actionSignupFragmentToLoginFragment(); //init to velaki
+                                    Navigation.findNavController(view).navigate(action); //allagh fragment NEXT STEP
+                                    Toast.makeText(getActivity(), "SignUp Complete", Toast.LENGTH_LONG).show();
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Toast.makeText(getActivity(), "SignUp Failed", Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                        catch (Exception e) {
+                            String message = e.getMessage();
+                            Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
             }
         });
-
         button2 = view.findViewById(R.id.gotoLogin);
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
