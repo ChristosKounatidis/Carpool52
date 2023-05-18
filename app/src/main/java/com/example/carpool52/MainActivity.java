@@ -1,6 +1,8 @@
 package com.example.carpool52;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class MainActivity extends AppCompatActivity {
@@ -13,5 +15,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         db = FirebaseFirestore.getInstance();
+
     }
 }

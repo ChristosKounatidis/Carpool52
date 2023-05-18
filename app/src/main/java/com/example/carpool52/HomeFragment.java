@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link HomeFragment#newInstance} factory method to
@@ -59,6 +61,7 @@ public class HomeFragment extends Fragment {
     }
 
     private Button button;
+    FirebaseAuth fAuth;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -66,11 +69,18 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         button =view.findViewById(R.id.btnLogin);
+        fAuth = FirebaseAuth.getInstance();
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavDirections action = HomeFragmentDirections.actionHomeFragmentToLoginFragment(); //init to velaki
-                Navigation.findNavController(view).navigate(action); //allagh fragment
+                if(fAuth.getCurrentUser() != null){
+                    NavDirections action = HomeFragmentDirections.actionHomeFragmentToListFragment(); //init to velaki
+                    Navigation.findNavController(view).navigate(action); //allagh fragment
+                }
+                else{
+                    NavDirections action = HomeFragmentDirections.actionHomeFragmentToLoginFragment(); //init to velaki
+                    Navigation.findNavController(view).navigate(action); //allagh fragment
+                }
             }
         });
 
