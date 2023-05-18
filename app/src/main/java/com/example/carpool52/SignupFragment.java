@@ -72,9 +72,9 @@ public class SignupFragment extends Fragment {
 
     private Button buttonSignup;
     private Button button2;
-    private EditText Email;
-    private EditText Password;
-    private EditText Name;
+    private EditText email;
+    private EditText password;
+    private EditText name;
     FirebaseFirestore db;
     FirebaseAuth fAuth;
 
@@ -82,11 +82,10 @@ public class SignupFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_signup, container, false);
-        Email = view.findViewById(R.id.editEmailAddressSign);
-        Name = view.findViewById(R.id.editName);
-        Password = view.findViewById(R.id.editPasswordSign);
+        email = view.findViewById(R.id.editEmailAddressSign);
+        name = view.findViewById(R.id.editName);
+        password = view.findViewById(R.id.editPasswordSign);
         buttonSignup = view.findViewById(R.id.checkSignup);
         db = FirebaseFirestore.getInstance();
         fAuth = FirebaseAuth.getInstance();
@@ -94,10 +93,10 @@ public class SignupFragment extends Fragment {
         buttonSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String Var_email = Email.getText().toString().trim();
-                String Var_password = Password.getText().toString().trim();
-                String Var_name = Name.getText().toString().trim();
-                //
+                String Var_email = email.getText().toString().trim();
+                String Var_password = password.getText().toString().trim();
+                String Var_name = name.getText().toString().trim();
+
                 if(TextUtils.isEmpty(Var_email)){
                     Toast.makeText(getActivity(), "Email is required", Toast.LENGTH_LONG).show();
                     return;

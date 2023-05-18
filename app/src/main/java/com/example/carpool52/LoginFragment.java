@@ -3,14 +3,23 @@ package com.example.carpool52;
 import android.annotation.SuppressLint;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -59,26 +68,56 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    private Button button1;
-    private Button button2;
+    private Button loginBtn;
+    private Button signupBtn;
+    private EditText email;
+    private EditText password;
+    FirebaseAuth fAuth;
 
     @SuppressLint("MissingInflatedId")
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_login, container, false);
-        button1 =view.findViewById(R.id.checkLoginBtn);
-        button1.setOnClickListener(new View.OnClickListener() {
+        email = view.findViewById(R.id.editEmailAddressSign);
+        password = view.findViewById(R.id.editPasswordSign);
+        fAuth = FirebaseAuth.getInstance();
+
+        loginBtn = view.findViewById(R.id.checkLoginBtn);
+        loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NavDirections action1 = LoginFragmentDirections.actionLoginFragmentToListFragment(); //init to velaki
-                Navigation.findNavController(view).navigate(action1); //allagh fragment
+                String Var_email = email.getText().toString().trim();
+                String Var_password = password.getText().toString().trim();
+
+                if(TextUtils.isEmpty(Var_email)){
+                    Toast.makeText(getActivity(), "Email is required", Toast.LENGTH_LONG).show();
+                    return;
+                }
+                if(TextUtils.isEmpty(Var_password)){
+                    Toast.makeText(getActivity(), "Password is required", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                fAuth.signInWithEmailAndPassword(Var_email, Var_password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if(task.isSuccessful()) {
+                            Toast.makeText(getActivity(), "Logged in Successfully", Toast.LENGTH_LONG).show();
+                            NavDirections action1 = LoginFragmentDirections.actionLoginFragmentToListFragment(); //init to velaki
+                            Navigation.findNavController(view).navigate(action1); //allagh fragment
+                        }
+                        else{
+                            Toast.makeText(getActivity(), "Error : "+task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+
             }
         });
 
-        button2 = view.findViewById(R.id.gotoSignupBtn);
-        button2.setOnClickListener(new View.OnClickListener() {
+        signupBtn = view.findViewById(R.id.gotoSignupBtn);
+        signupBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 NavDirections action2 = LoginFragmentDirections.actionLoginFragmentToSignupFragment(); //init to velaki
