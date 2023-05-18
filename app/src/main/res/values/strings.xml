@@ -16,4 +16,5 @@
     <string name="Passanger">Επιβάτης</string>
     <string name="RadioMessage">Τι είσαι;</string>
     <string name="name">name</string>
+    <string name="logout">Logout</string>
 </resources>
