@@ -1,6 +1,6 @@
 # Carpool52
 
-A service that aims to make it easier for students to travel to/from DI.PAE, 
+An android app that aims to make it easier for students to travel to/from DI.PAE, 
 car owners reducing their expenses and non-car owners for a more convenient commute.
 
 ## Download v0.1
