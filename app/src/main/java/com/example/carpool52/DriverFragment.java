@@ -2,11 +2,27 @@ package com.example.carpool52;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,10 +71,65 @@ public class DriverFragment extends Fragment {
         }
     }
 
+    EditText descriptionTxt;
+    Button postBtn;
+    FirebaseFirestore db;
+    FirebaseAuth fAuth;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_driver, container, false);
+        View view = inflater.inflate(R.layout.fragment_driver, container, false);
+
+        descriptionTxt = view.findViewById(R.id.descriptionText);
+        postBtn = view.findViewById(R.id.postBtn);
+        db = FirebaseFirestore.getInstance();
+        fAuth = FirebaseAuth.getInstance();
+
+
+        postBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String Var_description = descriptionTxt.getText().toString().trim();
+                String Var_email = fAuth.getCurrentUser().getEmail().toString().trim();
+                Query query = db.collection("Users").whereEqualTo("email",Var_email);
+                query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        QuerySnapshot querySnapshot = task.getResult();
+                        String Var_uid = querySnapshot.getDocuments().get(0).getId();
+                        DocumentReference countersDocRef = db.collection("Counters").document("matches");
+                        countersDocRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                            @Override
+                            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                // Get the current maximum ID
+                                int currentMaxId = documentSnapshot.getLong("maxId").intValue();
+                                int newId = currentMaxId + 1;
+                                try {
+                                    Matches matches = new Matches(newId,Var_description,0,db.document("/Users/"+Var_uid),null,null,null);
+
+                                    MainActivity.db.collection("Matches").
+                                            document(""+newId).
+                                            set(matches).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void unused) {
+                                                    countersDocRef.update("maxId", newId);//UPDATE w/ the new max ID
+                                                    Toast.makeText(getActivity(), "Ad Posted", Toast.LENGTH_LONG).show();
+                                                }
+                                            });
+
+                                }catch (Exception e){
+                                    String message = e.getMessage();
+                                    Toast.makeText(getActivity(), message, Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+                    };
+                });
+            }
+        });
+
+        return view;
     }
 }
