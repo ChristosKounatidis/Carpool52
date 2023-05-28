@@ -91,8 +91,9 @@ public class PassengerFragment extends Fragment {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     for (DocumentSnapshot document : task.getResult()) {
-                        DocumentReference userRef = (DocumentReference) document.get("u1");
+                        String description = document.getString("description");
 
+                        DocumentReference userRef = (DocumentReference) document.get("u1");
                         userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> userTask) {
@@ -101,14 +102,13 @@ public class PassengerFragment extends Fragment {
                                     if (userDoc.exists()) {
                                         String email = userDoc.getString("email");
                                         String name = userDoc.getString("name");
-                                        String description = document.getString("description");
+                                        Long rating = userDoc.getLong("rating");
 
                                         LinearLayout setLayout = new LinearLayout(getContext());
                                         setLayout.setLayoutParams(new LinearLayout.LayoutParams(
                                                 LinearLayout.LayoutParams.MATCH_PARENT,
                                                 LinearLayout.LayoutParams.WRAP_CONTENT));
                                         setLayout.setOrientation(LinearLayout.VERTICAL);
-                                        setLayout.setPadding(0, 0, 0, spacingBetweenSets);
 
                                         GradientDrawable borderDrawable = new GradientDrawable();
                                         int borderColor = ContextCompat.getColor(getContext(), R.color.border_color);
@@ -127,6 +127,12 @@ public class PassengerFragment extends Fragment {
                                                 LinearLayout.LayoutParams.WRAP_CONTENT));
                                         textViewName.setText("Name: " + name);
 
+                                        TextView textViewRating = new TextView(getContext());
+                                        textViewRating.setLayoutParams(new LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                LinearLayout.LayoutParams.WRAP_CONTENT));
+                                        textViewRating.setText("Rating: " + rating);
+
                                         TextView textViewDescription = new TextView(getContext());
                                         textViewDescription.setLayoutParams(new LinearLayout.LayoutParams(
                                                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -135,6 +141,7 @@ public class PassengerFragment extends Fragment {
 
                                         setLayout.addView(textViewEmail);
                                         setLayout.addView(textViewName);
+                                        setLayout.addView(textViewRating);
                                         setLayout.addView(textViewDescription);
 
                                         containerLayout.addView(setLayout);
