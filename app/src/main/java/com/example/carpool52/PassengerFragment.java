@@ -1,12 +1,27 @@
 package com.example.carpool52;
 
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,10 +70,87 @@ public class PassengerFragment extends Fragment {
         }
     }
 
+    private LinearLayout containerLayout;
+    private FirebaseFirestore db;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_passenger, container, false);
+        View view = inflater.inflate(R.layout.fragment_passenger, container, false);
+        containerLayout = view.findViewById(R.id.container_layout);
+        db = FirebaseFirestore.getInstance();
+
+        int spacingBetweenSets = getResources().getDimensionPixelSize(R.dimen.spacing_between_sets);
+        containerLayout.setPadding(0, spacingBetweenSets, 0, 0);
+
+        CollectionReference matchesRef = db.collection("Matches");
+        Query query = matchesRef.whereEqualTo("status", 0);
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (DocumentSnapshot document : task.getResult()) {
+                        DocumentReference userRef = (DocumentReference) document.get("u1");
+
+                        userRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<DocumentSnapshot> userTask) {
+                                if (userTask.isSuccessful()) {
+                                    DocumentSnapshot userDoc = userTask.getResult();
+                                    if (userDoc.exists()) {
+                                        String email = userDoc.getString("email");
+                                        String name = userDoc.getString("name");
+                                        String description = document.getString("description");
+
+                                        LinearLayout setLayout = new LinearLayout(getContext());
+                                        setLayout.setLayoutParams(new LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.MATCH_PARENT,
+                                                LinearLayout.LayoutParams.WRAP_CONTENT));
+                                        setLayout.setOrientation(LinearLayout.VERTICAL);
+                                        setLayout.setPadding(0, 0, 0, spacingBetweenSets);
+
+                                        GradientDrawable borderDrawable = new GradientDrawable();
+                                        int borderColor = ContextCompat.getColor(getContext(), R.color.border_color);
+                                        borderDrawable.setStroke(2, borderColor);
+                                        setLayout.setBackground(borderDrawable);
+
+                                        TextView textViewEmail = new TextView(getContext());
+                                        textViewEmail.setLayoutParams(new LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                LinearLayout.LayoutParams.WRAP_CONTENT));
+                                        textViewEmail.setText("Email: " + email);
+
+                                        TextView textViewName = new TextView(getContext());
+                                        textViewName.setLayoutParams(new LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                LinearLayout.LayoutParams.WRAP_CONTENT));
+                                        textViewName.setText("Name: " + name);
+
+                                        TextView textViewDescription = new TextView(getContext());
+                                        textViewDescription.setLayoutParams(new LinearLayout.LayoutParams(
+                                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                                LinearLayout.LayoutParams.WRAP_CONTENT));
+                                        textViewDescription.setText("Description: " + description);
+
+                                        setLayout.addView(textViewEmail);
+                                        setLayout.addView(textViewName);
+                                        setLayout.addView(textViewDescription);
+
+                                        containerLayout.addView(setLayout);
+                                    }
+                                } else {
+                                    Log.d("Firestore", "Error getting user document: ", userTask.getException());
+                                }
+                            }
+                        });
+                    }
+                } else {
+                    Log.d("Firestore", "Error getting documents: ", task.getException());
+                }
+            }
+        });
+
+        return view;
     }
 }

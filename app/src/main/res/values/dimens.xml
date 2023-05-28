@@ -1,3 +1,4 @@
 <resources>
     <dimen name="text_margin">16dp</dimen>
+    <dimen name="spacing_between_sets">10dp</dimen>
 </resources>
